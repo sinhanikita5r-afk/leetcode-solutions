@@ -10,20 +10,59 @@
  */
 class Solution {
 public:
+
+    // Function to reverse linked list
+    ListNode* reverseList(ListNode* head) {
+
+        if (head == nullptr || head->next == nullptr) {
+            return head;
+        }
+
+        ListNode* newHead = reverseList(head->next);
+
+        head->next->next = head;
+        head->next = nullptr;
+
+        return newHead;
+    }
+
+
+    
     bool isPalindrome(ListNode* head) {
-        stack<int>st;
-        ListNode* temp=head;
-        while(temp!=nullptr){
-            st.push(temp->val);
-            temp=temp->next;
-        }
-        temp=head;
-        while(temp!=nullptr){
-            if(temp->val!=st.top()) return false;
-            temp=temp->next;
-            st.pop();
-        }
-        return true;
+
         
+        if (head == nullptr || head->next == nullptr) {
+            return true;
+        }
+
+        ListNode* slow = head;
+        ListNode* fast = head;
+
+        while (fast != nullptr && fast->next != nullptr) {
+            slow = slow->next;
+            fast = fast->next->next;
+        }
+
+        
+        ListNode* newHead = reverseList(slow);
+
+        
+        ListNode* first = head;
+        ListNode* second = newHead;
+
+        while (second != nullptr) {
+
+            if (first->val != second->val) {
+                return false;
+            }
+
+            first = first->next;
+            second = second->next;
+        }
+
+        
+        reverseList(newHead);
+
+        return true;
     }
 };
