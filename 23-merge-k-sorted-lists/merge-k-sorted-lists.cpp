@@ -9,37 +9,44 @@
  * };
  */
 
+
 class Solution {
 public:
-    ListNode* arrayToLinkedList(vector<int>& arr) {
-        if (arr.empty()) return nullptr;
+    ListNode* merge2Lists(ListNode* list1, ListNode* list2) {
+        ListNode* dummyNode = new ListNode(-1);
+        ListNode* temp = dummyNode;
 
-        ListNode* head = new ListNode(arr[0]);
-        ListNode* curr = head;
-
-        for (int i = 1; i < arr.size(); i++) {
-            curr->next = new ListNode(arr[i]);
-            curr = curr->next;
-        }
-
-        return head;
-    }
-
-    ListNode* mergeKLists(vector<ListNode*>& lists) {
-        vector<int> arr;
-
-        for (int i = 0; i < lists.size(); i++) {
-            ListNode* temp = lists[i];
-
-            while (temp != nullptr) {
-                arr.push_back(temp->val);
-                temp = temp->next;
+        while (list1 != nullptr && list2 != nullptr) {
+            if (list1->val < list2->val) {
+                temp->next = list1;
+                temp = list1;
+                list1 = list1->next;
+            }
+            else {
+                temp->next = list2;
+                temp = list2;
+                list2 = list2->next;
             }
         }
 
-        sort(arr.begin(), arr.end());
+        if (list1 != nullptr) {
+            temp->next = list1;
+        }
+        else {
+            temp->next = list2;
+        }
 
-        ListNode* head = arrayToLinkedList(arr);
+        return dummyNode->next;
+    }
+
+    ListNode* mergeKLists(vector<ListNode*>& lists) {
+        if (lists.empty()) return nullptr;
+
+        ListNode* head = lists[0];
+
+        for (int i = 1; i < lists.size(); i++) {
+            head = merge2Lists(head, lists[i]);
+        }
 
         return head;
     }
